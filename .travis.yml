@@ -17,8 +17,14 @@ python:
 
 cache: pip
 
-env:
-- BUILD=TESTS
+stages:
+  - test
+  - name: deploy-dev
+    if: branch = master
+  - name: deploy-stg
+    if: tag IS present
+
+
 - BUILD=LINT
 
 before_install:
@@ -31,20 +37,13 @@ install:
 - nvm use v7.4.0
 - npm install
 
-script:
-- scripts/travis.sh
-
-after_success:
-- coveralls
-
-deploy:
-  - skip_cleanup: true
-    provider: script
-    script: scripts/deploy/run_deploy.sh testing
-    on:
-      branch: improve-travis
-  - skip_cleanup: true
-    provider: script
-    script: scripts/deploy/run_deploy.sh staging
-    on:
-      tags: true
+jobs:
+  include:
+    - stage: test
+      script: BUILD=TESTS scripts/travis.sh
+    - stage: test
+      script: BUILD=LINT scripts/travis.sh
+    - stage: deploy-dev
+      script: scripts/deploy/run_deploy.sh testing
+    - stage: deploy-stg
+      script: scripts/deploy/run_deploy.sh staging
