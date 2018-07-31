@@ -19,10 +19,7 @@ cache: pip
 
 stages:
   - test
-  - name: deploy-dev
-    if: branch = master
-  - name: deploy-stg
-    if: tag IS present
+  - deploy
 
 
 - BUILD=LINT
@@ -39,11 +36,17 @@ install:
 
 jobs:
   include:
-    - stage: test
-      script: BUILD=TESTS scripts/travis.sh
-    - stage: test
-      script: BUILD=LINT scripts/travis.sh
-    - stage: deploy-dev
-      script: scripts/deploy/run_deploy.sh testing
-    - stage: deploy-stg
-      script: scripts/deploy/run_deploy.sh staging
+    - script: BUILD=TESTS scripts/travis.sh
+    - script: BUILD=LINT scripts/travis.sh
+    - stage: deploy
+      deploy:
+        - skip_cleanup: true
+          provider: script
+          script: scripts/deploy/run_deploy.sh testing
+          on:
+            branch: improve-travis
+        - skip_cleanup: true
+          provider: script
+          script: scripts/deploy/run_deploy.sh staging
+          on:
+            tags: true
