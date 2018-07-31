@@ -15,7 +15,8 @@ python:
 - "3.6"
 
 env:
-- DJANGO_SETTINGS_MODULE=conf.settings.testing
+- BUILD=TESTS
+- BUILD=LINT
 
 before_install:
 - docker-compose pull
@@ -29,10 +30,7 @@ install:
 - npm install
 
 script:
-- npm run jsc
-- scripts/tests.sh
-- scripts/pylint.sh
-- scripts/pycodestyle.sh
+- scripts/travis.sh
 
 after_success:
 - coveralls
