@@ -9,6 +9,7 @@ addons:
 
 services:
 - docker
+- elasticsearch
 
 language: python
 python:
@@ -21,8 +22,7 @@ env:
 - BUILD=LINT
 
 before_install:
-- docker-compose pull
-- docker-compose up -d elasticsearch redis
+- docker-compose up -d redis
 - docker-compose ps
 
 install:

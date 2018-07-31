@@ -5,7 +5,7 @@ set -e;
 DJANGO_SETTINGS_MODULE=conf.settings.testing
 
 if [ $BUILD = "TESTS" ]; then
-    sh scripts/tests.sh;
+    ES_URLS='http://localhost:9200/' sh scripts/tests.sh;
 elif [ $BUILD = "LINT" ]; then
     sh scripts/pycodestyle.sh;
     sh scripts/pylint.sh;
