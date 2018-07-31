@@ -21,7 +21,8 @@ stages:
   - test
   - deploy
 
-
+env:
+- BUILD=TESTS
 - BUILD=LINT
 
 before_install:
@@ -36,8 +37,7 @@ install:
 
 jobs:
   include:
-    - script: BUILD=TESTS scripts/travis.sh
-    - script: BUILD=LINT scripts/travis.sh
+    - script: scripts/travis.sh
     - stage: deploy
       deploy:
         - skip_cleanup: true
